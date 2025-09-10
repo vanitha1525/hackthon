@@ -1,1079 +1,186 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
-
-<meta charset="utf-8" />
-
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<title>Beauty Parlor â€” Web App (Demo)</title>
-
-<style>
-
-:root{--accent:#b84d7a;--muted:#666}
-
-*{box-sizing:border-box}
-
-body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;margin:0;background:#f7f7fb;color:#222}
-
-/* Login */
-
-.center{display:flex;align-items:center;justify-content:center;height:100vh}
-
-.card{background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(16,24,40,0.08);padding:28px;max-width:960px;width:100%}
-
-.logo{display:flex;gap:12px;align-items:center}
-
-.logo svg{width:56px;height:56px}
-
-h1{margin:6px 0 0;font-size:20px}
-
-p.lead{color:var(--muted);margin:6px 0 16px}
-
-.row{display:flex;gap:18px}
-
-.col{flex:1}
-
-input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e6e9ee;font-size:14px}
-
-button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
-
-button.secondary{background:#fff;color:var(--accent);border:1px solid #f0d7e3}
-
-.members{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px}
-
-.member{background:#fff;padding:14px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.04)}
-
-.member .name{font-weight:600}
-
-.tag{display:inline-block;padding:6px 8px;border-radius:999px;background:#fff;border:1px dashed #eee;margin-top:8px;font-size:12px}
-
-.products{margin-top:10px}
-
-.product{display:flex;align-items:center;justify-content:space-between;padding:8px 6px;border-top:1px solid #f1f3f6}
-
-.product:first-child{border-top:0}
-
-.flex{display:flex;align-items:center;gap:8px}
-
-.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#f3e8ef;color:var(--accent)}
-
-.topbar{display:flex;align-items:center;justify-content:space-between}
-
-.search{padding:8px 12px;border-radius:8px;border:1px solid #e9eef5;width:300px}
-
-.cart{position:relative}
-
-.cart-count{position:absolute;right:-6px;top:-6px;background:#ff6b6b;color:#fff;padding:4px 6px;border-radius:999px;font-size:12px}
-
-/* Flowchart */
-
-.flowwrap{background:#fff;padding:16px;border-radius:10px;margin-top:18px}
-
-svg.flow{width:100%;height:220px}
-
-/* Modal */
-
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.45)}
-
-.modal .box{background:#fff;padding:18px;border-radius:12px;max-width:560px;width:100%}
-
-.hide{display:none}
-
-footer{margin-top:18px;color:var(--muted);font-size:13px}
-
-@media (max-width:640px){.row{flex-direction:column}.search{width:100%}}
-
-</style>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Beauty Parlor — Web App</title>
+  <style>
+    :root{--accent:#d63384;--muted:#555}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+      background:url('https://images.unsplash.com/photo-1522337660859-02fbefca4702') no-repeat center center fixed;
+      background-size:cover;
+      color:#222;
+    }
+    body::before{
+      content:"";
+      position:fixed;inset:0;
+      background:rgba(255,255,255,0.7);
+      z-index:-1;
+    }
+    .center{display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{background:#fff;border-radius:20px;box-shadow:0 10px 35px rgba(0,0,0,0.15);padding:32px;max-width:1000px;width:100%}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo svg{width:56px;height:56px}
+    h1{margin:6px 0 0;font-size:26px;color:var(--accent)}
+    p.lead{color:var(--muted);margin:6px 0 16px}
+    .row{display:flex;gap:18px;flex-wrap:wrap}
+    .col{flex:1;min-width:280px}
+    input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;font-size:14px}
+    button{background:var(--accent);color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;transition:0.3s;font-size:14px}
+    button:hover{opacity:0.9;transform:scale(1.03)}
+    button.secondary{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+    .members{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px}
+    .member{background:#fff;padding:16px;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,0.08);transition:0.3s}
+    .member:hover{transform:translateY(-4px)}
+    .member .name{font-weight:600;color:var(--accent)}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:#fafafa;border:1px dashed #ddd;margin-top:8px;font-size:12px}
+    .products{margin-top:10px}
+    .product{display:flex;align-items:center;justify-content:space-between;padding:8px 6px;border-top:1px solid #f1f3f6}
+    .product:first-child{border-top:0}
+    .flex{display:flex;align-items:center;gap:8px}
+    .badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#ffe6f0;color:var(--accent)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .search{padding:8px 12px;border-radius:8px;border:1px solid #ccc;width:280px}
+    .cart{position:relative}
+    .cart-count{position:absolute;right:-6px;top:-6px;background:#ff6b6b;color:#fff;padding:4px 6px;border-radius:999px;font-size:12px}
+    .flowwrap{background:#fff;padding:16px;border-radius:12px;margin-top:18px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+    svg.flow{width:100%;height:220px}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45)}
+    .modal .box{background:#fff;padding:22px;border-radius:14px;max-width:560px;width:100%}
+    .hide{display:none}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    @media (max-width:640px){.row{flex-direction:column}.search{width:100%}}
+    .profile-pic{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}
+  </style>
 </head>
-
 <body>
-  <background imasge:"https://share.google/images/38n3S80a2Rhm6lw2q">
-
-<!-- LOGIN / SPLASH -->
-
-<div id="loginScreen" class="center">
-
-<div class="card" style="max-width:480px">
-
-<div class="logo">
-
-<!-- Inline logo SVG -->
-
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#b84d7a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#b84d7a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
-
-<div>
-
-<h1>Blossom Beauty â€” Login</h1>
-
-<p class="lead">Welcome! Use any name to continue (demo only â€” no real auth).</p>
-
-</div>
-
-</div>
-
-<div style="margin-top:14px">
-
-<input id="usernameInput" placeholder="Enter your name" />
-
-<div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
-
-<button id="loginBtn">Enter</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- APP -->
-
-<div id="app" class="hide" style="padding:22px">
-
-<div class="card">
-
-<div class="topbar">
-
-<div class="left">
-
-<div class="logo" style="align-items:center">
-
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#b84d7a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#b84d7a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
-
-<div style="margin-left:8px"><strong>Blossom Beauty</strong><div style="font-size:12px;color:var(--muted)">Natural products â€¢ Home service</div></div>
-
-</div>
-
-</div>
-
-<div class="right" style="display:flex;align-items:center;gap:12px">
-
-<input id="search" class="search" placeholder="Search services, products or member" />
-
-<div class="cart">
-
-<button id="viewCart">Cart</button>
-
-<div id="cartCount" class="cart-count hide">0</div>
-
-</div>
-
-<button id="logout" class="secondary">Logout</button>
-
-</div>
-
-</div>
-
-
-<div style="margin-top:12px">
-
-<div class="row">
-
-<div class="col">
-
-<h3>Our Experts</h3>
-
-<div id="members" class="members">
-
-<!-- members injected by JS -->
-
-</div>
-
-</div>
-
-<div class="col">
-
-<h3>Booking Flow</h3>
-
-<div class="flowwrap">
-
-<!-- simple SVG flowchart -->
-
-<svg class="flow" viewBox="0 0 900 220" preserveAspectRatio="xMidYMid meet">
-
-<defs>
-
-<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
-
-<path d="M0,0 L10,5 L0,10 z" fill="#b84d7a"></path>
-
-</marker>
-
-</defs>
-
-<!-- boxes -->
-
-<rect x="40" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="130" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Member / Service</text>
-
-
-<rect x="300" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="390" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Select Date & Time</text>
-
-
-<rect x="560" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="650" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Home / Salon</text>
-
-
-<rect x="300" y="120" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="390" y="150" text-anchor="middle" alignment-baseline="middle" font-size="14">Confirm & Pay</text>
-
-
-<!-- arrows -->
-
-<line x1="220" y1="60" x2="300" y2="60" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<line x1="480" y1="60" x2="560" y2="60" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<line x1="390" y1="90" x2="390" y2="120" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<circle cx="650" cy="170" r="26" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="650" y="175" text-anchor="middle" alignment-baseline="middle" font-size="12">Done</text>
-
-</svg>
-
-<p style="font-size:13px;color:var(--muted);margin-top:10px">This flowchart shows the simple booking path: choose member â†’ select time â†’ home/salon â†’ confirm & pay.</p>
-
-</div>
-
-
-<h3 style="margin-top:12px">Quick Filters</h3>
-
-<div style="display:flex;gap:8px;margin-top:8px">
-
-<button onclick="filterHomeService(true)" class="secondary">Home Service</button>
-
-<button onclick="filterHomeService(false)" class="secondary">Salon Only</button>
-
-<button onclick="resetFilter()" class="secondary">Show All</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<footer>Tip: To edit members or products, open the JS section inside the file and modify the <code>membersData</code> array. This is a static demo â€” integrate with a backend for production.</footer>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- Product / Profile Modal -->
-
-<div id="modal" class="modal">
-
-<div class="box">
-
-<div id="modalContent"></div>
-
-<div style="display:flex;justify-content:flex-end;margin-top:12px">
-
-<button onclick="closeModal()" class="secondary">Close</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-// Demo member data (edit to change members / products)
-
-const membersData = [
-
-{
-
-id: 'm1', name: 'Ananya', category: 'Hair & Makeup', exp: '6 yrs', homeService: true,
-
-specialties: ['Bridal', 'Party Makeup', 'Hair Styling'], products: [{id:'p1',name:'Herbal Hair Oil', price:250},{id:'p2',name:'Natural Lip Balm', price:120}]
-
-},
-
-{
-
-id: 'm2', name: 'Bhavya', category: 'Skincare', exp: '8 yrs', homeService: true,
-
-specialties: ['Facials', 'Skin Brightening'], products: [{id:'p3',name:'Aloe Glow Serum', price:450},{id:'p4',name:'Sandalwood Soap', price:90}]
-
-},
-
-{
-
-id: 'm3', name: 'Charmi', category: 'Nails & Spa', exp: '5 yrs', homeService: false,
-
-specialties: ['Manicure', 'Pedicure', 'Foot Spa'], products: [{id:'p5',name:'Nourish Nail Oil', price:180},{id:'p6',name:'Organic Scrub', price:220}]
-
-},
-
-{
-
-id: 'm4', name: 'Deepa', category: 'Therapies', exp: '10 yrs', homeService: true,
-
-specialties: ['Head Massage', 'Ayurvedic Therapy'], products: [{id:'p7',name:'Herbal Massage Oil', price:300},{id:'p8',name:'Calm Bath Salts', price:150}]
-
-}
-
-];
-
-
-// Simple in-memory cart
-
-let cart = [];
-
-function addToCart(product, member){
-
-cart.push({product,member});
-
-updateCartCount();
-
-alert(product.name + ' added to cart');
-
-}
-
-function updateCartCount(){
-
-const el = document.getElementById('cartCount');
-
-if(cart.length>0){el.classList.remove('hide');el.textContent=cart.length;} else {el.classList.add('hide');}
-
-}
-
-
-// Render members
-
-function renderMembers(list){
-
-const container = document.getElementById('members'); container.innerHTML='';
-
-list.forEach(m=>{
-
-const div = document.createElement('div'); div.className='member';
-
-div.innerHTML = `
-
-<div style="display:flex;justify-content:space-between;align-items:center">
-
-<div>
-
-<div class="name">${m.name} <span style="color:var(--muted);font-weight:400">â€¢ ${m.exp}</span></div>
-
-<div style="font-size:13px;color:var(--muted)">${m.category}</div>
-
-</div>
-
-<div style="text-align:right">
-
-<div class="badge">${m.homeService? 'Home Service' : 'Salon Only'}</div>
-
-<div style="margin-top:6px;font-size:12px" class="tag">${m.specialties.slice(0,2).join(', ')}</div>
-
-</div>
-
-</div>
-
-<div class="products">
-
-${m.products.map(p => `
-
-<div class="product">
-
-<div><strong>${p.name}</strong><div style="font-size:12px;color:var(--muted)">â‚¹${p.price}</div></div>
-
-<div class="flex">
-
-<button onclick='openProduct("${m.id}","${p.id}")'>View</button>
-
-<button onclick='addToCart(${JSON.stringify(p)}, ${JSON.stringify(m)})' class="secondary">Buy</button>
-
-</div>
-
-</div>
-
-`).join('')}
-
-</div>
-
-`;
-
-container.appendChild(div);
-
-});
-
-}
-
-
-function openProduct(memberId, productId){
-
-const m = membersData.find(x=>x.id===memberId);
-
-const p = m.products.find(x=>x.id===productId);
-
-const modal = document.getElementById('modal');
-
-document.getElementById('modalContent').innerHTML = `
-
-<h3>${p.name}</h3>
-
-<p style="color:var(--muted)">Sold by <strong>${m.name}</strong> â€” ${m.category}</p>
-
-<p style="margin-top:8px">Price: â‚¹${p.price}</p>
-
-<p style="margin-top:8px">Description: A high-quality natural product hand-made/selected by ${m.name}. Edit this text in the source to customise.</p>
-
-<div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-
-<button onclick='addToCart(${JSON.stringify(p)}, ${JSON.stringify(m)})'>Add to Cart</button>
-
-</div>
-
-`;
-
-modal.style.display='flex';
-
-}
-
-function closeModal(){document.getElementById('modal').style.display='none'}
-
-
-// Filters
-
-let filteredHomeService = null;
-
-function filterHomeService(onlyHome){filteredHomeService = onlyHome;applyFilters();}
-
-function resetFilter(){filteredHomeService = null;applyFilters();}
-
-function applyFilters(){
-
-let data = [...membersData];
-
-const q = (document.getElementById('search').value || '').toLowerCase().trim();
-
-if(filteredHomeService!==null) data = data.filter(m=>m.homeService===filteredHomeService);
-
-if(q) data = data.filter(m => m.name.toLowerCase().includes(q) || m.category.toLowerCase().includes(q) || m.specialties.join(' ').toLowerCase().includes(q) || m.products.some(p=>p.name.toLowerCase().includes(q)));
-
-renderMembers(data);
-
-}
-
-
-// Login handling (demo only)
-
-document.getElementById('loginBtn').addEventListener('click', ()=>{
-
-const name = document.getElementById('usernameInput').value.trim();
-
-if(!name) return alert('Please enter your name');
-
-localStorage.setItem('bb_user', name);
-
-startApp();
-
-});
-
-document.getElementById('logout').addEventListener('click', ()=>{localStorage.removeItem('bb_user');location.reload()});
-
-
-function startApp(){
-
-const user = localStorage.getItem('bb_user');
-
-if(!user) return; document.getElementById('loginScreen').classList.add('hide'); document.getElementById('app').classList.remove('hide');
-
-renderMembers(membersData);
-
-document.getElementById('search').addEventListener('input', applyFilters);
-
-document.getElementById('viewCart').addEventListener('click', ()=>{
-
-if(cart.length===0){alert('Cart is empty')} else {
-
-const summary = cart.map((c,i)=>`${i+1}. ${c.product.name} (by ${c.member.name}) - â‚¹${c.product.price}`).join('\n');
-
-const total = cart.reduce((s,c)=>s + c.product.price,0);
-
-if(confirm(summary + '\n\nTotal: â‚¹' + total + '\n\nProceed to pay (demo)?')){alert('Payment simulated â€” booking confirmed.\nThank you!'); cart=[]; updateCartCount();}
-
-}
-
-});
-
-updateCartCount();
-
-}
-
-
-// Auto-login if present
-
-if(localStorage.getItem('bb_user')) startApp();
-
-
-// Expose some functions for quick edits in console
-
-window.membersData = membersData; window.addToCart = addToCart; window.renderMembers = renderMembers;
-
-</script>
-
-</body>
-
-</html>
-
-
-<!doctype html>
-
-<html lang="en">
-
-<head>
-
-<meta charset="utf-8" />
-
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
-<title>Beauty Parlor â€” Web App (Demo)</title>
-
-<style>
-
-:root{--accent:#b84d7a;--muted:#666}
-
-*{box-sizing:border-box}
-
-body{font-family:Inter,system-ui,Arial,Helvetica,sans-serif;margin:0;background:#f7f7fb;color:#222}
-
-/* Login */
-
-.center{display:flex;align-items:center;justify-content:center;height:100vh}
-
-.card{background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(16,24,40,0.08);padding:28px;max-width:960px;width:100%}
-
-.logo{display:flex;gap:12px;align-items:center}
-
-.logo svg{width:56px;height:56px}
-
-h1{margin:6px 0 0;font-size:20px}
-
-p.lead{color:var(--muted);margin:6px 0 16px}
-
-.row{display:flex;gap:18px}
-
-.col{flex:1}
-
-input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e6e9ee;font-size:14px}
-
-button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
-
-button.secondary{background:#fff;color:var(--accent);border:1px solid #f0d7e3}
-
-.members{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px}
-
-.member{background:#fff;padding:14px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.04)}
-
-.member .name{font-weight:600}
-
-.tag{display:inline-block;padding:6px 8px;border-radius:999px;background:#fff;border:1px dashed #eee;margin-top:8px;font-size:12px}
-
-.products{margin-top:10px}
-
-.product{display:flex;align-items:center;justify-content:space-between;padding:8px 6px;border-top:1px solid #f1f3f6}
-
-.product:first-child{border-top:0}
-
-.flex{display:flex;align-items:center;gap:8px}
-
-.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#f3e8ef;color:var(--accent)}
-
-.topbar{display:flex;align-items:center;justify-content:space-between}
-
-.search{padding:8px 12px;border-radius:8px;border:1px solid #e9eef5;width:300px}
-
-.cart{position:relative}
-
-.cart-count{position:absolute;right:-6px;top:-6px;background:#ff6b6b;color:#fff;padding:4px 6px;border-radius:999px;font-size:12px}
-
-/* Flowchart */
-
-.flowwrap{background:#fff;padding:16px;border-radius:10px;margin-top:18px}
-
-svg.flow{width:100%;height:220px}
-
-/* Modal */
-
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.45)}
-
-.modal .box{background:#fff;padding:18px;border-radius:12px;max-width:560px;width:100%}
-
-.hide{display:none}
-
-footer{margin-top:18px;color:var(--muted);font-size:13px}
-
-@media (max-width:640px){.row{flex-direction:column}.search{width:100%}}
-
-</style>
-
-</head>
-
-<body>
-
-<!-- LOGIN / SPLASH -->
-
-<div id="loginScreen" class="center">
-
-<div class="card" style="max-width:480px">
-
-<div class="logo">
-
-<!-- Inline logo SVG -->
-
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#b84d7a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#b84d7a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
-
-<div>
-
-<h1>Blossom Beauty â€” Login</h1>
-
-<p class="lead">Welcome! Use any name to continue (demo only â€” no real auth).</p>
-
-</div>
-
-</div>
-
-<div style="margin-top:14px">
-
-<input id="usernameInput" placeholder="Enter your name" />
-
-<div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
-
-<button id="loginBtn">Enter</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- APP -->
-
-<div id="app" class="hide" style="padding:22px">
-
-<div class="card">
-
-<div class="topbar">
-
-<div class="left">
-
-<div class="logo" style="align-items:center">
-
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#b84d7a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#b84d7a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
-
-<div style="margin-left:8px"><strong>Blossom Beauty</strong><div style="font-size:12px;color:var(--muted)">Natural products â€¢ Home service</div></div>
-
-</div>
-
-</div>
-
-<div class="right" style="display:flex;align-items:center;gap:12px">
-
-<input id="search" class="search" placeholder="Search services, products or member" />
-
-<div class="cart">
-
-<button id="viewCart">Cart</button>
-
-<div id="cartCount" class="cart-count hide">0</div>
-
-</div>
-
-<button id="logout" class="secondary">Logout</button>
-
-</div>
-
-</div>
-
-
-<div style="margin-top:12px">
-
-<div class="row">
-
-<div class="col">
-
-<h3>Our Experts</h3>
-
-<div id="members" class="members">
-
-<!-- members injected by JS -->
-
-</div>
-
-</div>
-
-<div class="col">
-
-<h3>Booking Flow</h3>
-
-<div class="flowwrap">
-
-<!-- simple SVG flowchart -->
-
-<svg class="flow" viewBox="0 0 900 220" preserveAspectRatio="xMidYMid meet">
-
-<defs>
-
-<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
-
-<path d="M0,0 L10,5 L0,10 z" fill="#b84d7a"></path>
-
-</marker>
-
-</defs>
-
-<!-- boxes -->
-
-<rect x="40" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="130" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Member / Service</text>
-
-
-<rect x="300" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="390" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Select Date & Time</text>
-
-
-<rect x="560" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="650" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Home / Salon</text>
-
-
-<rect x="300" y="120" width="180" height="60" rx="10" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="390" y="150" text-anchor="middle" alignment-baseline="middle" font-size="14">Confirm & Pay</text>
-
-
-<!-- arrows -->
-
-<line x1="220" y1="60" x2="300" y2="60" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<line x1="480" y1="60" x2="560" y2="60" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<line x1="390" y1="90" x2="390" y2="120" stroke="#b84d7a" stroke-width="2" marker-end="url(#arrow)"/>
-
-<circle cx="650" cy="170" r="26" fill="#fff" stroke="#f0d7e3"/>
-
-<text x="650" y="175" text-anchor="middle" alignment-baseline="middle" font-size="12">Done</text>
-
-</svg>
-
-<p style="font-size:13px;color:var(--muted);margin-top:10px">This flowchart shows the simple booking path: choose member â†’ select time â†’ home/salon â†’ confirm & pay.</p>
-
-</div>
-
-
-<h3 style="margin-top:12px">Quick Filters</h3>
-
-<div style="display:flex;gap:8px;margin-top:8px">
-
-<button onclick="filterHomeService(true)" class="secondary">Home Service</button>
-
-<button onclick="filterHomeService(false)" class="secondary">Salon Only</button>
-
-<button onclick="resetFilter()" class="secondary">Show All</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<footer>Tip: To edit members or products, open the JS section inside the file and modify the <code>membersData</code> array. This is a static demo â€” integrate with a backend for production.</footer>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- Product / Profile Modal -->
-
-<div id="modal" class="modal">
-
-<div class="box">
-
-<div id="modalContent"></div>
-
-<div style="display:flex;justify-content:flex-end;margin-top:12px">
-
-<button onclick="closeModal()" class="secondary">Close</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-// Demo member data (edit to change members / products)
-
-const membersData = [
-
-{
-
-id: 'm1', name: 'Ananya', category: 'Hair & Makeup', exp: '6 yrs', homeService: true,
-
-specialties: ['Bridal', 'Party Makeup', 'Hair Styling'], products: [{id:'p1',name:'Herbal Hair Oil', price:250},{id:'p2',name:'Natural Lip Balm', price:120}]
-
-},
-
-{
-
-id: 'm2', name: 'Bhavya', category: 'Skincare', exp: '8 yrs', homeService: true,
-
-specialties: ['Facials', 'Skin Brightening'], products: [{id:'p3',name:'Aloe Glow Serum', price:450},{id:'p4',name:'Sandalwood Soap', price:90}]
-
-},
-
-{
-
-id: 'm3', name: 'Charmi', category: 'Nails & Spa', exp: '5 yrs', homeService: false,
-
-specialties: ['Manicure', 'Pedicure', 'Foot Spa'], products: [{id:'p5',name:'Nourish Nail Oil', price:180},{id:'p6',name:'Organic Scrub', price:220}]
-
-},
-
-{
-
-id: 'm4', name: 'Deepa', category: 'Therapies', exp: '10 yrs', homeService: true,
-
-specialties: ['Head Massage', 'Ayurvedic Therapy'], products: [{id:'p7',name:'Herbal Massage Oil', price:300},{id:'p8',name:'Calm Bath Salts', price:150}]
-
-}
-
-];
-
-
-// Simple in-memory cart
-
-let cart = [];
-
-function addToCart(product, member){
-
-cart.push({product,member});
-
-updateCartCount();
-
-alert(product.name + ' added to cart');
-
-}
-
-function updateCartCount(){
-
-const el = document.getElementById('cartCount');
-
-if(cart.length>0){el.classList.remove('hide');el.textContent=cart.length;} else {el.classList.add('hide');}
-
-}
-
-
-// Render members
-
-function renderMembers(list){
-
-const container = document.getElementById('members'); container.innerHTML='';
-
-list.forEach(m=>{
-
-const div = document.createElement('div'); div.className='member';
-
-div.innerHTML = `
-
-<div style="display:flex;justify-content:space-between;align-items:center">
-
-<div>
-
-<div class="name">${m.name} <span style="color:var(--muted);font-weight:400">â€¢ ${m.exp}</span></div>
-
-<div style="font-size:13px;color:var(--muted)">${m.category}</div>
-
-</div>
-
-<div style="text-align:right">
-
-<div class="badge">${m.homeService? 'Home Service' : 'Salon Only'}</div>
-
-<div style="margin-top:6px;font-size:12px" class="tag">${m.specialties.slice(0,2).join(', ')}</div>
-
-</div>
-
-</div>
-
-<div class="products">
-
-${m.products.map(p => `
-
-<div class="product">
-
-<div><strong>${p.name}</strong><div style="font-size:12px;color:var(--muted)">â‚¹${p.price}</div></div>
-
-<div class="flex">
-
-<button onclick='openProduct("${m.id}","${p.id}")'>View</button>
-
-<button onclick='addToCart(${JSON.stringify(p)}, ${JSON.stringify(m)})' class="secondary">Buy</button>
-
-</div>
-
-</div>
-
-`).join('')}
-
-</div>
-
-`;
-
-container.appendChild(div);
-
-});
-
-}
-
-
-function openProduct(memberId, productId){
-
-const m = membersData.find(x=>x.id===memberId);
-
-const p = m.products.find(x=>x.id===productId);
-
-const modal = document.getElementById('modal');
-
-document.getElementById('modalContent').innerHTML = `
-
-<h3>${p.name}</h3>
-
-<p style="color:var(--muted)">Sold by <strong>${m.name}</strong> â€” ${m.category}</p>
-
-<p style="margin-top:8px">Price: â‚¹${p.price}</p>
-
-<p style="margin-top:8px">Description: A high-quality natural product hand-made/selected by ${m.name}. Edit this text in the source to customise.</p>
-
-<div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-
-<button onclick='addToCart(${JSON.stringify(p)}, ${JSON.stringify(m)})'>Add to Cart</button>
-
-</div>
-
-`;
-
-modal.style.display='flex';
-
-}
-
-function closeModal(){document.getElementById('modal').style.display='none'}
-
-
-// Filters
-
-let filteredHomeService = null;
-
-function filterHomeService(onlyHome){filteredHomeService = onlyHome;applyFilters();}
-
-function resetFilter(){filteredHomeService = null;applyFilters();}
-
-function applyFilters(){
-
-let data = [...membersData];
-
-const q = (document.getElementById('search').value || '').toLowerCase().trim();
-
-if(filteredHomeService!==null) data = data.filter(m=>m.homeService===filteredHomeService);
-
-if(q) data = data.filter(m => m.name.toLowerCase().includes(q) || m.category.toLowerCase().includes(q) || m.specialties.join(' ').toLowerCase().includes(q) || m.products.some(p=>p.name.toLowerCase().includes(q)));
-
-renderMembers(data);
-
-}
-
-
-// Login handling (demo only)
-
-document.getElementById('loginBtn').addEventListener('click', ()=>{
-
-const name = document.getElementById('usernameInput').value.trim();
-
-if(!name) return alert('Please enter your name');
-
-localStorage.setItem('bb_user', name);
-
-startApp();
-
-});
-
-document.getElementById('logout').addEventListener('click', ()=>{localStorage.removeItem('bb_user');location.reload()});
-
-
-function startApp(){
-
-const user = localStorage.getItem('bb_user');
-
-if(!user) return; document.getElementById('loginScreen').classList.add('hide'); document.getElementById('app').classList.remove('hide');
-
-renderMembers(membersData);
-
-document.getElementById('search').addEventListener('input', applyFilters);
-
-document.getElementById('viewCart').addEventListener('click', ()=>{
-
-if(cart.length===0){alert('Cart is empty')} else {
-
-const summary = cart.map((c,i)=>`${i+1}. ${c.product.name} (by ${c.member.name}) - â‚¹${c.product.price}`).join('\n');
-
-const total = cart.reduce((s,c)=>s + c.product.price,0);
-
-if(confirm(summary + '\n\nTotal: â‚¹' + total + '\n\nProceed to pay (demo)?')){alert('Payment simulated â€” booking confirmed.\nThank you!'); cart=[]; updateCartCount();}
-
-}
-
-});
-
-updateCartCount();
-
-}
-
-
-// Auto-login if present
-
-if(localStorage.getItem('bb_user')) startApp();
-
-
-// Expose some functions for quick edits in console
-
-window.membersData = membersData; window.addToCart = addToCart; window.renderMembers = renderMembers;
-
-</script>
-
-</body>
-
-</html>
+  <!-- LOGIN -->
+  <div id="loginScreen" class="center">
+    <div class="card" style="max-width:480px">
+      <div class="logo">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#d63384" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#d63384" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
+        <div>
+          <h1>Blossom Beauty — Login</h1>
+          <p class="lead">Welcome! Enter your name to continue.</p>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <input id="usernameInput" placeholder="Enter your name" />
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="loginBtn">Enter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hide" style="padding:22px">
+    <div class="card">
+      <div class="topbar">
+        <div class="logo" style="align-items:center">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="30" fill="#ffeef6"/><path d="M20 40c6-9 16-9 20 0" stroke="#d63384" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M26 25c2-3 6-4 9-2" stroke="#d63384" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
+          <div style="margin-left:8px"><strong>Blossom Beauty</strong><div style="font-size:12px;color:var(--muted)">Natural products • Home service</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <input id="search" class="search" placeholder="Search services, products or member" />
+          <div class="cart">
+            <button id="viewCart">Cart</button>
+            <div id="cartCount" class="cart-count hide">0</div>
+          </div>
+          <button id="logout" class="secondary">Logout</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="row">
+          <div class="col">
+            <h3 style="color:var(--accent)">Our Experts</h3>
+            <div id="members" class="members"></div>
+          </div>
+          <div class="col">
+            <h3 style="color:var(--accent)">Booking Flow</h3>
+            <div class="flowwrap">
+              <svg class="flow" viewBox="0 0 900 220" preserveAspectRatio="xMidYMid meet">
+                <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#d63384"></path></marker></defs>
+                <rect x="40" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f5cce0"/>
+                <text x="130" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Member / Service</text>
+                <rect x="300" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f5cce0"/>
+                <text x="390" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Select Date & Time</text>
+                <rect x="560" y="30" width="180" height="60" rx="10" fill="#fff" stroke="#f5cce0"/>
+                <text x="650" y="60" text-anchor="middle" alignment-baseline="middle" font-size="14">Choose Home / Salon</text>
+                <rect x="300" y="120" width="180" height="60" rx="10" fill="#fff" stroke="#f5cce0"/>
+                <text x="390" y="150" text-anchor="middle" alignment-baseline="middle" font-size="14">Confirm & Pay</text>
+                <line x1="220" y1="60" x2="300" y2="60" stroke="#d63384" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="480" y1="60" x2="560" y2="60" stroke="#d63384" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="390" y1="90" x2="390" y2="120" stroke="#d63384" stroke-width="2" marker-end="url(#arrow)"/>
+                <circle cx="650" cy="170" r="26" fill="#fff" stroke="#f5cce0"/>
+                <text x="650" y="175" text-anchor="middle" alignment-baseline="middle" font-size="12">Done</text>
+              </svg>
+              <p style="font-size:13px;color:var(--muted);margin-top:10px">Booking path: choose member → select time → home/salon → confirm & pay.</p>
+            </div>
+            <h3 style="margin-top:12px;color:var(--accent)">Quick Filters</h3>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+              <button onclick="filterHomeService(true)" class="secondary">Home Service</button>
+              <button onclick="filterHomeService(false)" class="secondary">Salon Only</button>
+              <button onclick="resetFilter()" class="secondary">Show All</button>
+            </div>
+          </div>
+        </div>
+        <footer>© 2025 Blossom Beauty. All rights reserved.</footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="box">
+      <div id="modalContent"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button onclick="closeModal()" class="secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const membersData = [
+      { id: 'm1', name: 'Swathi', category: 'Hair & Makeup', exp: '7 yrs', homeService: true, specialties: ['Bridal Styling','Party Makeup','Hair Care'], products: [{id:'p1',name:'Herbal Hair Oil',price:250},{id:'p2',name:'Natural Lip Balm',price:120}], photo:'https://randomuser.me/api/portraits/women/1.jpg'},
+      { id: 'm2', name: 'Vanitha', category: 'Skincare', exp: '9 yrs', homeService: true, specialties: ['Facials','Skin Glow','Anti-ageing'], products: [{id:'p3',name:'Aloe Glow Serum',price:450},{id:'p4',name:'Sandalwood Soap',price:90}], photo:'https://randomuser.me/api/portraits/women/2.jpg'},
+      { id: 'm3', name: 'Likitha', category: 'Nails & Spa', exp: '6 yrs', homeService: false, specialties: ['Manicure','Pedicure','Spa Therapy'], products: [{id:'p5',name:'Nourish Nail Oil',price:180},{id:'p6',name:'Organic Scrub',price:220}], photo:'https://randomuser.me/api/portraits/women/3.jpg'},
+      { id: 'm4', name: 'Chandhrakala', category: 'Therapies', exp: '10 yrs', homeService: true, specialties: ['Head Massage','Ayurvedic Therapy'], products: [{id:'p7',name:'Herbal Massage Oil',price:300},{id:'p8',name:'Calm Bath Salts',price:150}], photo:'https://randomuser.me/api/portraits/women/4.jpg'},
+      { id: 'm5', name: 'LalithaReddy', category: 'Makeup & Styling', exp: '8 yrs', homeService: true, specialties: ['HD Makeup','Fashion Styling'], products: [{id:'p9',name:'Organic Kajal',price:200},{id:'p10',name:'Rose Face Pack',price:170}], photo:'https://randomuser.me/api/portraits/women/5.jpg'},
+      { id: 'm6', name: 'Deepa', category: 'Hair Styling', exp: '5 yrs', homeService: true, specialties: ['Layer Cuts','Hair Spa'], products: [{id:'p11',name:'Keratin Shampoo',price:300}], photo:'https://randomuser.me/api/portraits/women/6.jpg'},
+      { id: 'm7', name: 'Priya', category: 'Henna & Mehendi', exp: '7 yrs', homeService: true, specialties: ['Bridal Mehendi','Party Mehendi'], products: [{id:'p12',name:'Organic Henna Cone',price:50}], photo:'https://randomuser.me/api/portraits/women/7.jpg'},
+      { id: 'm8', name: 'Shalini', category: 'Cosmetology', exp: '11 yrs', homeService: false, specialties: ['Laser Treatment','Cosmetic Care'], products: [{id:'p13',name:'Vitamin C Serum',price:600}], photo:'https://randomuser.me/api/portraits/women/8.jpg'},
+      { id: 'm9', name: 'Anitha', category: 'Massage & Spa', exp: '12 yrs', homeService: true, specialties: ['Full Body Massage','Aroma Therapy'], products: [{id:'p14',name:'Aroma Essential Oil',price:350}], photo:'https://randomuser.me/api/portraits/women/9.jpg'}
+    ];
+
+    let cart = [];
+    function addToCart(product,member){cart.push({product,member});updateCartCount();alert(product.name+' added to cart');}
+    function updateCartCount(){const el=document.getElementById('cartCount');if(cart.length>0){el.classList.remove('hide');el.textContent=cart.length;}else{el.classList.add('hide');}}
+
+    function renderMembers(list){
+      const container=document.getElementById('members');container.innerHTML='';
+      list.forEach(m=>{
+        const div=document.createElement('div');div.className='member';
+        div.innerHTML=`
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;align-items:center;gap:10px">
+              <img src="${m.photo}" alt="${m.name}" class="profile-pic"/>
+              <div>
+                <div class="name">${m.name} <span style="color:var(--muted);font-weight:400">• ${m.exp}</span></div>
+                <div style="font-size:13px;color:var(--muted)">${m.category}</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="badge">${m.homeService? 'Home Service' : 'Salon Only'}</div>
+              <div style="margin-top:6px;font-size:12px" class="tag">${m.specialties.slice(0,2).join(', ')}</div>
+            </div>
+          </div>
+          <div class="products">
+            ${m.products.map(p=>`
+              <div class="product">
+                <div><strong>${p.name}</strong><div style="font-size:12px;color:var(--muted)">₹${p.price}</div></div>
+                <div class="flex">
+                  <
